@@ -25,9 +25,10 @@ public class ExceptionalVendingMachine {
    * @throws IllegalArgumentException with a descriptive error message if capacity is zero or
    *                                  negative
    */
-  public ExceptionalVendingMachine(int capacity) {
-    // TODO complete the implementation of this method with respect to the details of its javadoc
-    // comments
+  public ExceptionalVendingMachine(int capacity) throws IllegalArgumentException {
+    if (capacity <= 0) {
+      throw new IllegalArgumentException("invalid capcity");
+    }
 
     items = new Item[capacity];
     size = 0; // optional since 0 is the default value for primitive type int
@@ -39,8 +40,7 @@ public class ExceptionalVendingMachine {
    * @return true if this vending machine is empty, false otherwise
    */
   public boolean isEmpty() {
-    // TODO implement this method
-    return false; // default return statement. Feel free to change it
+    return size == 0;
   }
 
   /**
@@ -49,8 +49,7 @@ public class ExceptionalVendingMachine {
    * @return true if this vending machine is full, false otherwise
    */
   public boolean isFull() {
-    // TODO implement this method
-    return false; // default return statement. Feel free to change it
+    return size == items.length;
   }
 
   /**
@@ -59,8 +58,7 @@ public class ExceptionalVendingMachine {
    * @return the size of this vending machine
    */
   public int size() {
-    // TODO implement this method
-    return 0; // default return statement. Feel free to change it
+    return size;
   }
 
   /**
@@ -74,15 +72,17 @@ public class ExceptionalVendingMachine {
    * @throws IllegalArgumentException with a descriptive error message if description is null or
    *                                  blank or if expirationDate is negative ( &lt; 0)
    */
-  public void addItem(String description, int expirationDate) {
-    // TODO complete the implementation of this method with respect to its above specification
-
-
+  public void addItem(String description, int expirationDate) throws IllegalStateException, IllegalArgumentException {
+    if(isFull()) {
+      throw new IllegalStateException("vending machine full");
+    }
+    if(expirationDate < 0 || description == null || description.equals("")) {
+      throw new IllegalStateException("invalid description or expiration date");
+    }
     // create a new item and add it to the end of this vending machine
     items[size] = new Item(description, expirationDate);
     size++;
   }
-
 
   /**
    * Returns without removing the string representation of the item at the given index within the
@@ -96,8 +96,9 @@ public class ExceptionalVendingMachine {
    *                                   &gt;= size of the vending machine
    */
   public String getItemAtIndex(int index) {
-    // TODO complete the implementation of this method with respect to its above specification
-
+    if(index < 0 || index >= size) {
+      throw new IndexOutOfBoundsException("invalid index at : " + Integer.toString(index));
+    }
     return items[index].toString();
   }
 
@@ -110,8 +111,9 @@ public class ExceptionalVendingMachine {
    *                                  blank
    */
   public int getItemOccurrences(String description) {
-    // TODO: Complete the implementation of this method with respect to the above details
-
+    if (description == null || description.equals("")) {
+      throw new IllegalArgumentException("invalid description");
+    }
     int nbOccurrences = 0;
     for (int i = 0; i < size; i++) {
       if (description.equals(items[i].getDescription())) {
@@ -130,7 +132,9 @@ public class ExceptionalVendingMachine {
    *                                  blank
    */
   public boolean containsItem(String description) {
-    // TODO: Complete the implementation of this method with respect to the above details
+    if (description == null || description.equals("")) {
+      throw new IllegalArgumentException("invalid description");
+    }
     return getItemOccurrences(description) != 0;
   }
 
@@ -146,8 +150,9 @@ public class ExceptionalVendingMachine {
    *                                  (less than zero) or description is null or blank
    */
   public int getItemOccurrencesByExpirationDate(String description, int expirationDate) {
-    // TODO: Complete the implementation of this method with respect to the above details
-
+    if(expirationDate < 0 || description == null || description.equals("")) {
+      throw new IllegalStateException("invalid description or expiration date");
+    }
     int nbOccurrences = 0; // number of occurrences of the matching items
     // traverse the vending machine looking for matching items
     for (int i = 0; i < size; i++) {
@@ -172,8 +177,9 @@ public class ExceptionalVendingMachine {
    * @throws NoSuchElementException   with a descriptive error message if no match found
    */
   public int getIndexNextItem(String description) {
-    // TODO complete the implementation of this method with respect to the details provided above
-
+    if (description == null || description.equals("")) {
+      throw new IllegalArgumentException("invalid description");
+    }
     int index = -1; // index of the search item
     int minExpirationDate = -1; // smallest expiration date of matching items
 
@@ -192,6 +198,9 @@ public class ExceptionalVendingMachine {
           }
         }
       }
+    }
+    if (index == -1) {
+      throw new NoSuchElementException("nothing found");
     }
 
 
@@ -277,7 +286,19 @@ public class ExceptionalVendingMachine {
    * @throws IllegalStateException    with a descriptive error message if the vending machine is
    *                                  full
    */
-  public void loadOneItem(String itemRepresentation) {
+  public void loadOneItem(String itemRepresentation) throws DataFormatException {
+    String[] parsed = itemRepresentation.trim().split(":");
+    if (!(parsed[1] instanceof String)) {
+      throw new DataFormatException("bad description");
+    }
+    try{
+      Integer.valueOf(parsed[2]);
+    }
+    catch (NumberFormatException e) {
+      throw new DataFormatException("bad number");
+    }
+    addItem(parsed[1].substring(0, parsed[1].length() - 1), Integer.valueOf(parsed[2]));
+
     // TODO Complete the implementation of this method with respect to the details provided above
     // TODO Add throws declarations to the method signature as required
 
@@ -305,6 +326,7 @@ public class ExceptionalVendingMachine {
    *                               the file system.
    */
   public int loadItems(File file) {
+    
     // TODO Complete the implementation of this method with respect to the details provided above
     // TODO Add throws declarations to the method signature as required
 
