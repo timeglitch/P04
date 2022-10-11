@@ -61,6 +61,6 @@ public class Item {
      */
     @Override
     public boolean equals(Object other) {
-        return other instanceof Item && other.getDescription().equals(description);
+        return other instanceof Item && ((Item) other).getDescription().equals(description);
     }
 }

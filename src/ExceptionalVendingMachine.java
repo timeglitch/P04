@@ -6,7 +6,7 @@ import java.util.zip.DataFormatException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
-
+//import java.util.Arrays;
 
 
 /**
@@ -27,7 +27,7 @@ public class ExceptionalVendingMachine {
    */
   public ExceptionalVendingMachine(int capacity) throws IllegalArgumentException {
     if (capacity <= 0) {
-      throw new IllegalArgumentException("invalid capcity");
+      throw new IllegalArgumentException("invalid capacity");
     }
 
     items = new Item[capacity];
@@ -288,16 +288,17 @@ public class ExceptionalVendingMachine {
    */
   public void loadOneItem(String itemRepresentation) throws DataFormatException {
     String[] parsed = itemRepresentation.trim().split(":");
-    if (!(parsed[1] instanceof String)) {
+    int date;
+    if (!(parsed[0] instanceof String)) {
       throw new DataFormatException("bad description");
     }
     try{
-      Integer.valueOf(parsed[2]);
+      date = Integer.parseInt(parsed[1].strip());
     }
     catch (NumberFormatException e) {
       throw new DataFormatException("bad number");
     }
-    addItem(parsed[1].substring(0, parsed[1].length() - 1), Integer.valueOf(parsed[2]));
+    addItem(parsed[0].substring(0, parsed[0].length() - 1), date);
 
     // TODO Complete the implementation of this method with respect to the details provided above
     // TODO Add throws declarations to the method signature as required
@@ -325,19 +326,26 @@ public class ExceptionalVendingMachine {
    * @throws FileNotFoundException if the file object does not correspond to an actual file within
    *                               the file system.
    */
-  public int loadItems(File file) {
+  public int loadItems(File file) throws FileNotFoundException {
     
-    // TODO Complete the implementation of this method with respect to the details provided above
-    // TODO Add throws declarations to the method signature as required
+    int counter = 0;
 
-    // Create and use a java.util.Scanner object to open and read the file
-    // This method MUST call the loadOneItem(String) method to operate while parsing each line
+    Scanner s = new Scanner(file);
+    while (!isFull()) {
+      try {
+        if(!s.hasNextLine()) {
+          return counter;
+        }
+        loadOneItem(s.nextLine());
+        counter = counter + 1;
 
-    // Notice carefully that this method does not throw any exception if the vending machine is full
-    // or becomes full while trying to lead an item.
-
-
-    return 0; // default return statement. Feel free to change it.
+      }
+      catch(Exception e) {
+        //do nothing
+      }
+    }
+    System.out.println("Vending machine FULL. No more items can be loaded.");
+    return counter;
   }
 
   /**

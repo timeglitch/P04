@@ -132,7 +132,19 @@ public class ExceptionalVendingMachineTester {
    * @return true if the test verifies a correct functionality and false if any bug is detected
    */
   public static boolean testLoadOneItem() {
-    return false; // default return statement added to resolve compiler errors
+    ExceptionalVendingMachine test = new ExceptionalVendingMachine(2);
+    test.addItem("description", 1);
+    try{
+      test.loadOneItem("description: 1");
+    }
+    catch (Exception e) {
+      System.out.println(e.getClass() + " with message: " + e.getMessage());
+      e.printStackTrace();
+      return false;
+    }
+    System.out.println(test.toString());
+    return true;
+    
   }
 
   /**
@@ -141,7 +153,7 @@ public class ExceptionalVendingMachineTester {
    * @return true if all testers pass with no errors, and false if any of the tester fails.
    */
   public static boolean runAllTests() {
-    return false; // default return statement added to resolve compiler errors
+    return false; //TODO fix
   }
 
   /**
@@ -150,6 +162,11 @@ public class ExceptionalVendingMachineTester {
    * @param args list of input arguments if any
    */
   public static void main(String[] args) {
+    System.out.print(testLoadOneItem());
+
+
+    System.out.println(runAllTests());
+
 
   }
 
