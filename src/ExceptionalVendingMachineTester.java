@@ -1,3 +1,5 @@
+import java.io.File;
+
 // TODO Add File header here
 
 // TODO import relevant exceptions here
@@ -142,9 +144,23 @@ public class ExceptionalVendingMachineTester {
       e.printStackTrace();
       return false;
     }
-    System.out.println(test.toString());
+    System.out.println(test.getItemsSummary());
     return true;
     
+  }
+
+  public static boolean testLoadFile() {
+    ExceptionalVendingMachine test = new ExceptionalVendingMachine(100);
+    try {
+      test.loadItems(new File("test1.txt"));
+      System.out.println(test.getItemsSummary());
+
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+    }
+    return true;
+
   }
 
   /**
@@ -162,9 +178,8 @@ public class ExceptionalVendingMachineTester {
    * @param args list of input arguments if any
    */
   public static void main(String[] args) {
-    System.out.print(testLoadOneItem());
-
-
+    System.out.println(testLoadOneItem());
+    System.out.println(testLoadFile());
     System.out.println(runAllTests());
 
 

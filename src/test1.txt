@@ -1,0 +1,16 @@
+Snack:50
+Soda : 35
+ Chocolate: 20
+Water: 15
+ 
+Soda:-5
+ Soda: 5
+  :10
+Water: ten
+Orange Juice: 25
+Apple Juice:15
+Orange Juice:10
+Soda:Water:35
+
+Chocolate:45
+Water:30
