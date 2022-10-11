@@ -13,14 +13,29 @@ public class Item {
         this.expirationDate = expirationDate;
     }
 
+    
+    /** 
+     * getter 
+     * @return String description
+     */
     public String getDescription() {
         return description;
     }
 
+    
+    /** 
+     * getter 
+     * @return int expiration date as int from start time
+     */
     public int getExpirationDate() {
         return expirationDate;
     }
 
+    
+    /** 
+     * setter 
+     * @param input item description
+     */
     public void setDescription(String input) {
         if(description == null || description.equals("")) {
             throw new IllegalArgumentException("description is invalid");
@@ -28,11 +43,22 @@ public class Item {
         description = input;
     }
 
+    
+    /** 
+     * return item description and name
+     * @return String output
+     */
     @Override
     public String toString() {
         return description + ": " + Integer.toString(expirationDate);
     }
 
+    
+    /** 
+     * is same if item has same description
+     * @param other vending machine
+     * @return boolean is equal or not
+     */
     @Override
     public boolean equals(Object other) {
         return other instanceof Item && other.getDescription().equals(description);

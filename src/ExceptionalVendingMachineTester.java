@@ -54,6 +54,16 @@ public class ExceptionalVendingMachineTester {
    * @return true if the test verifies a correct functionality and false if any bug is detected
    */
   public static boolean testExceptionalVendingMachineConstructor() {
+    try {
+      new ExceptionalVendingMachine(1);
+      new ExceptionalVendingMachine(-1);
+    }
+    catch(IllegalArgumentException e) {
+      return true;
+    }
+    catch(Exception e) {
+      return false;
+    }
     return false; // default return statement added to resolve compiler errors
   }
 
@@ -77,7 +87,36 @@ public class ExceptionalVendingMachineTester {
    * @return true if the test verifies a correct functionality and false if any bug is detected
    */
   public static boolean testEmptySizeFullExceptionalVendingMachine() {
-    return false; // default return statement added to resolve compiler errors
+    try{
+      ExceptionalVendingMachine test = new ExceptionalVendingMachine(2);
+      if(!test.isEmpty()) {
+        throw new Exception("nope");
+      }
+      if(test.isFull()) {
+        throw new Exception("failure");
+      }
+      if(test.size() != 0) {
+        throw new Exception("darn");
+      }
+      test.addItem("description", 1);
+      test.addItem("description", 2);
+      if(test.isEmpty()) {
+        throw new Exception("nope");
+      }
+      if(!test.isFull()) {
+        throw new Exception("failure");
+      }
+      if(test.size() != 2) {
+        throw new Exception("darn");
+      }
+
+
+
+      return true;
+    }
+    catch (Exception e) {
+      return false;
+    }
   }
 
   /**
