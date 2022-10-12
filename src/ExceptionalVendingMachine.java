@@ -5,7 +5,10 @@ import java.util.NoSuchElementException;
 import java.util.zip.DataFormatException;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Scanner;
+import java.io.FileWriter;
 //import java.util.Arrays;
 
 
@@ -298,7 +301,7 @@ public class ExceptionalVendingMachine {
     catch (NumberFormatException e) {
       throw new DataFormatException("bad number");
     }
-    addItem(parsed[0].substring(0, parsed[0].length() - 1), date);
+    addItem(parsed[0].strip(), date);
 
     // TODO Complete the implementation of this method with respect to the details provided above
     // TODO Add throws declarations to the method signature as required
@@ -343,6 +346,9 @@ public class ExceptionalVendingMachine {
       catch(Exception e) {
         //do nothing
       }
+      finally {
+        s.close();
+      }
     }
     System.out.println("Vending machine FULL. No more items can be loaded.");
     return counter;
@@ -354,16 +360,15 @@ public class ExceptionalVendingMachine {
    * @param file file object where the vending machine summary will be saved
    */
   public void saveVendingMachineSummary(File file) {
-    // TODO Complete the implementation of this method with respect to the details provided above
-
-    // You can use either a java.io.PrintWriter or a java.io.FileWriter to write into the file
-
-    // This method MUST call the getItemsSummary() to get the summary of this vending machine to be
-    // saved to the file
-
-    // This method MUST NOT throw any exception
-
-
+    if(file.exists() && file.canWrite()) {
+      try{
+        FileWriter pen = new FileWriter(file);
+        pen.write(getItemsSummary());
+        pen.close();
+      }
+      catch(Exception e) {
+        e.printStackTrace();
+      }
+    }
   }
-
 }

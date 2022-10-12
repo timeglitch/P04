@@ -137,7 +137,7 @@ public class ExceptionalVendingMachineTester {
     ExceptionalVendingMachine test = new ExceptionalVendingMachine(2);
     test.addItem("description", 1);
     try{
-      test.loadOneItem("description: 1");
+      test.loadOneItem("description't: 3");
     }
     catch (Exception e) {
       System.out.println(e.getClass() + " with message: " + e.getMessage());
@@ -152,16 +152,35 @@ public class ExceptionalVendingMachineTester {
   public static boolean testLoadFile() {
     ExceptionalVendingMachine test = new ExceptionalVendingMachine(100);
     try {
-      test.loadItems(new File("test1.txt"));
-      System.out.println(test.getItemsSummary());
+      File inputfile = new File("src\\test1.txt");
+      test.loadItems(inputfile);
+      //System.out.println(test.getItemsSummary());
 
     }
     catch (Exception e) {
+      //System.out.println(test.getItemsSummary());
       e.printStackTrace();
+      return false;
     }
     return true;
-
   }
+
+  public static boolean testSaveFile() {
+    ExceptionalVendingMachine test = new ExceptionalVendingMachine(100);
+    try {
+      File inputfile = new File("src\\test1.txt");
+      test.loadItems(inputfile);
+      test.saveVendingMachineSummary(new File("src\\out.txt"));
+
+    }
+    catch (Exception e) {
+      //System.out.println(test.getItemsSummary());
+      e.printStackTrace();
+      return false;
+    }
+    return true;
+  }
+  
 
   /**
    * Invokes all the public tester methods implemented in this class
@@ -178,9 +197,10 @@ public class ExceptionalVendingMachineTester {
    * @param args list of input arguments if any
    */
   public static void main(String[] args) {
-    System.out.println(testLoadOneItem());
-    System.out.println(testLoadFile());
-    System.out.println(runAllTests());
+    //System.out.println(testLoadOneItem());
+    //System.out.println(testLoadFile());
+    System.out.println(testSaveFile());
+    //System.out.println(runAllTests());
 
 
   }
