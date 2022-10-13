@@ -21,6 +21,14 @@ public class ExceptionalVendingMachineTester {
    * @return true if the test verifies a correct functionality and false if any bug is detected
    */
   public static boolean testItemConstructorNotValidInput() {
+    try{
+      Item x = new Item(" ", 1);
+
+    }
+    catch (IllegalArgumentException e) {
+      return true;
+
+    }
     return false;
   }
 
@@ -188,7 +196,7 @@ public class ExceptionalVendingMachineTester {
    * @return true if all testers pass with no errors, and false if any of the tester fails.
    */
   public static boolean runAllTests() {
-    return false; //TODO fix
+    return(testItemConstructorNotValidInput());
   }
 
   /**
@@ -197,9 +205,11 @@ public class ExceptionalVendingMachineTester {
    * @param args list of input arguments if any
    */
   public static void main(String[] args) {
+    runAllTests();
+    System.out.println(testItemConstructorNotValidInput());
     //System.out.println(testLoadOneItem());
     //System.out.println(testLoadFile());
-    System.out.println(testSaveFile());
+    //System.out.println(testSaveFile());
     //System.out.println(runAllTests());
 
 

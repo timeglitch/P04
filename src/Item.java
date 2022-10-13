@@ -6,8 +6,8 @@ public class Item {
         if(expirationDate < 0) {
             throw new IllegalArgumentException("expiration date is invalid");
         }
-        if(description == null || description.equals("")) {
-            throw new IllegalArgumentException("description is invalid");
+        if(description == null || description.strip().equals("")) {
+            throw new IllegalArgumentException("description is invalid: " + description);
         }
         this.description = description;
         this.expirationDate = expirationDate;
