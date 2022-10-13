@@ -79,8 +79,8 @@ public class ExceptionalVendingMachine {
     if(isFull()) {
       throw new IllegalStateException("vending machine full");
     }
-    if(expirationDate < 0 || description == null || description.equals("")) {
-      throw new IllegalStateException("invalid description or expiration date");
+    if(expirationDate < 0 || description == null || description.strip().equals("")) {
+      throw new IllegalArgumentException("invalid description or expiration date");
     }
     // create a new item and add it to the end of this vending machine
     items[size] = new Item(description, expirationDate);
@@ -266,10 +266,6 @@ public class ExceptionalVendingMachine {
     return summary.trim(); // return the items' summary
   }
 
-  // TODO Implement the methods loadOneItem, loadItems, and saveItems
-
-
-
   /**
    * Parse an item's string representation and add the corresponding item to this vending machine
    * 
@@ -290,7 +286,13 @@ public class ExceptionalVendingMachine {
    *                                  full
    */
   public void loadOneItem(String itemRepresentation) throws DataFormatException {
+    if( itemRepresentation == null || itemRepresentation.strip().equals("")) {
+      throw new IllegalArgumentException("input string invalid: " + itemRepresentation);
+    }
     String[] parsed = itemRepresentation.trim().split(":");
+    if(parsed.length != 2) {
+      throw new DataFormatException("incorrect string format");
+    }
     int date;
     if (!(parsed[0] instanceof String)) {
       throw new DataFormatException("bad description");
@@ -301,17 +303,12 @@ public class ExceptionalVendingMachine {
     catch (NumberFormatException e) {
       throw new DataFormatException("bad number");
     }
-    addItem(parsed[0].strip(), date);
-
-    // TODO Complete the implementation of this method with respect to the details provided above
-    // TODO Add throws declarations to the method signature as required
-
-    // [HINT] Use String.split() and String.trim() methods to help parsing the itemRepresentation
-    // This method MUST call addItem(String, int) to try adding the parsed item to the vending
-    // machine
-
-    // This is a complex method. Try to decompose it into steps. We highly recommend breaking its
-    // functionality down the way that you see fits using private helper methods.
+    try {
+      addItem(parsed[0].strip(), date);
+    }
+    catch (IllegalArgumentException e ){
+      throw new DataFormatException(e.getMessage());
+    }
 
   }
 
@@ -343,14 +340,16 @@ public class ExceptionalVendingMachine {
         counter = counter + 1;
 
       }
+      catch (NoSuchElementException e) {
+        s.close();
+        return counter;
+      }
       catch(Exception e) {
         //do nothing
       }
-      finally {
-        s.close();
-      }
     }
     System.out.println("Vending machine FULL. No more items can be loaded.");
+    s.close();
     return counter;
   }
 
@@ -360,9 +359,15 @@ public class ExceptionalVendingMachine {
    * @param file file object where the vending machine summary will be saved
    */
   public void saveVendingMachineSummary(File file) {
+    if(!file.exists()) {
+      try {
+        file.createNewFile();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
     if(file.exists() && file.canWrite()) {
-      try{
-        FileWriter pen = new FileWriter(file);
+      try (FileWriter pen = new FileWriter(file)){
         pen.write(getItemsSummary());
         pen.close();
       }
